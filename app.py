@@ -10,7 +10,7 @@ import pandas as pd
 import numpy as np
 
 # ── Cargar y limpiar datos ─────────────────────────────────────────────────────
-df = pd.read_csv(r"C:\Users\Julian\Documents\PA-ÉNFASIS-3\pension_dataset.csv", sep=";")
+df = pd.read_csv("pension_dataset.csv", sep=";")
 
 # Limpiar columna Pension_Price (eliminar puntos de miles)
 df["Pension_Price"] = (
@@ -19,10 +19,16 @@ df["Pension_Price"] = (
 
 # Crear columna de fecha real
 month_map = {
-    "ene": 1, "feb": 2, "mar": 3, "abr": 4, "may": 5, "jun": 6,
-    "jul": 7, "ago": 8, "sep": 9, "oct": 10, "nov": 11, "dic": 12,
+    "enero": 1, "febrero": 2, "marzo": 3, "abril": 4,
+    "mayo": 5, "junio": 6, "julio": 7, "agosto": 8,
+    "septiembre": 9, "octubre": 10, "noviembre": 11, "diciembre": 12,
+    "ene": 1, "feb": 2, "mar": 3, "abr": 4,
+    "may": 5, "jun": 6, "jul": 7, "ago": 8,
+    "sep": 9, "oct": 10, "nov": 11, "dic": 12
 }
-df["Month_num"] = df["Month"]
+
+df["Month"] = df["Month"].str.lower().str.strip()
+df["Month_num"] = df["Month"].map(month_map)
 df["Date_dt"] = pd.to_datetime(
     {"year": df["Year"], "month": df["Month_num"], "day": 1}
 )
@@ -650,6 +656,5 @@ def update_heatmap(year_range, metric, category, risk, employment):
     )
     return apply_template(fig)
 
-
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=8050)
+    app.run(debug=True)
